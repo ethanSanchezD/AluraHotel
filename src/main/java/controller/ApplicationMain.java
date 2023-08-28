@@ -2,13 +2,9 @@ package controller;
 
 public class ApplicationMain {
 	public static void main(String[] args) {
-		PrincipalWindowController principalWindowController = new PrincipalWindowController();
+		MainController mainController = new MainController();
+		mainController.build();
 		
-		
-		
-		
-		principalWindowController.build();
-		principalWindowController.showPrincipalWindow();
 	}
 	
 }
