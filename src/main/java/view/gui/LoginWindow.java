@@ -4,8 +4,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
 import antlr.debug.NewLineEvent;
+import controller.LoginWindowController;
 
 import java.awt.Color;
+import java.awt.Cursor;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -17,11 +19,14 @@ import javax.swing.JSeparator;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 public class LoginWindow extends JPanel {
 	private JTextField txtUsernameInput;
 	private JPasswordField txtPassword;
 	private final String fontUrlString = "src/main/resources/fonts/ROBOTOCONDENSED-BOLD.ttf";
+	
+	private LoginWindowController loginWindowController;
 
 	/**
 	 * Create the panel.
@@ -116,12 +121,51 @@ public class LoginWindow extends JPanel {
 		separator_1.setBounds(48, 308, 306, 2);
 		loginLeftPanel.add(separator_1);
 		
-		JButton btnNewButton = new JButton("Log in");
-		btnNewButton.setBackground(new Color(244, 248, 233));
-		btnNewButton.setFont(new Font("Roboto Condensed", Font.BOLD, 14));
-		btnNewButton.setForeground(new Color(46, 20, 55));
-		btnNewButton.setBounds(265, 368, 89, 23);
-		loginLeftPanel.add(btnNewButton);
+		JButton btnLoginButton = new JButton("Log in");
+		btnLoginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PrincipalWindow.changePrincipalPanel(loginWindowController.getMainController().getUserMenuController().getUserMenu());
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnLoginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		btnLoginButton.setBackground(new Color(244, 248, 233));
+		btnLoginButton.setFont(new Font("Roboto Condensed", Font.BOLD, 14));
+		btnLoginButton.setForeground(new Color(46, 20, 55));
+		btnLoginButton.setBounds(265, 368, 89, 23);
+		loginLeftPanel.add(btnLoginButton);
+		
+		JPanel btnReturn = new JPanel();
+		btnReturn.setBackground(new Color(81, 66, 95));
+		btnReturn.setBounds(0, 0, 34, 42);
+		loginLeftPanel.add(btnReturn);
+		
+		JLabel lblReturn = new JLabel("<");
+		
+		lblReturn.setHorizontalAlignment(SwingConstants.CENTER);
+		lblReturn.setForeground(new Color(244, 248, 233));
+		lblReturn.setFont(new Font("Roboto Condensed", Font.BOLD, 26));
+		btnReturn.add(lblReturn);
+		btnReturn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PrincipalWindow.changePrincipalPanel(PrincipalWindow.getPrincipalPanel());
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnReturn.setBackground(new Color(132,108,153));
+				btnReturn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnReturn.setBackground(new Color(81,66,95));
+			}
+		});
+		
 		
 		JPanel rigthLoginPanel = new JPanel();
 		rigthLoginPanel.setBackground(new Color(202, 209, 195));
@@ -135,4 +179,22 @@ public class LoginWindow extends JPanel {
 		lblHotelIcon.setIcon(new ImagePanel().paintComponent(lblHotelIcon, "/icons/hotel.png"));
 
 	}
+
+	public JTextField getTxtUsernameInput() {
+		return txtUsernameInput;
+	}
+	
+	public JPasswordField getTxtPassword() {
+		return txtPassword;
+	}
+
+	public LoginWindowController getLoginWindowController() {
+		return loginWindowController;
+	}
+
+	public void setLoginWindowController(LoginWindowController loginWindowController) {
+		this.loginWindowController = loginWindowController;
+	}
+	
+	
 }

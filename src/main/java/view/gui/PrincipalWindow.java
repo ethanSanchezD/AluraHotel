@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import controller.PrincipalWindowController;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,8 +24,11 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+
 import javax.swing.JSeparator;
 
 public class PrincipalWindow extends JFrame {
@@ -32,11 +36,10 @@ public class PrincipalWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	private PrincipalWindowController principalWindowController;
-	private LoginWindow loginWindow;
 
-	private JPanel contentPane;
+	private static JPanel contentPane;
 
-	private JPanel principalPanel;
+	private static JPanel principalPanel;
 
 	private JPanel leftPanel;
 
@@ -153,9 +156,19 @@ public class PrincipalWindow extends JFrame {
 		lblLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				changeCenterPanel(loginWindow);
+				changePrincipalPanel(principalWindowController.getMainController().getLoginWindowController().getLoginWindow());
 				setTitle("Login");
 				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setUnderline(lblLogin, true);
+				lblLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setUnderline(lblLogin, false);
 			}
 		});
 		lblLogin.setForeground(new Color(244, 248, 233));
@@ -165,6 +178,18 @@ public class PrincipalWindow extends JFrame {
 		rigthPanel.add(lblLogin);
 		
 		lblSignUp = new JLabel("Sign up");
+		lblSignUp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				setUnderline(lblSignUp, true);
+				lblSignUp.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				setUnderline(lblSignUp, false);
+			}
+		});
 		lblSignUp.setForeground(new Color(244, 248, 233));
 		lblSignUp.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSignUp.setFont(ProyectFont.createFont("src/main/resources/fonts/ROBOTOCONDENSED-BOLD.ttf",16));
@@ -175,18 +200,37 @@ public class PrincipalWindow extends JFrame {
 	}
 	
 	/**
+	 * Underlines a JLabel text depending if it is called with a 'true' parameter
+	 * 
+	 * @param labelAsButton The JLabel that is going to be underlined
+	 * @param underlineOnOf true if wants the JLabel text underlined, false if don't
+	 *                      want it underlined
+	 */
+	private void setUnderline(JLabel labelAsButton, Boolean underlineOnOf) {
+		Font fontUnderlined = labelAsButton.getFont();
+		Map attribute = fontUnderlined.getAttributes();
+		if (underlineOnOf) {
+			attribute.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		} else {
+			attribute.put(TextAttribute.UNDERLINE, -1);
+		}
+
+		labelAsButton.setFont(fontUnderlined.deriveFont(attribute));
+	}
+	
+	/**
 	 * It change the centerPanel when a converter option is selected
 	 * 
 	 * @param panel The panel that is going to be replaced in the centerPanel
 	 */
-	private void changeCenterPanel(JPanel panel) {
+	public static void changePrincipalPanel(JPanel panel) {
 		panel.setSize(759, 442);
 		panel.setLocation(0, 0);
 
-		principalPanel.removeAll();
-		principalPanel.add(panel, BorderLayout.CENTER);
-		principalPanel.revalidate();
-		principalPanel.repaint();
+		contentPane.removeAll();
+		contentPane.add(panel, BorderLayout.CENTER);
+		contentPane.revalidate();
+		contentPane.repaint();
 	}
 
 	public PrincipalWindowController getPrincipalWindowController() {
@@ -197,12 +241,12 @@ public class PrincipalWindow extends JFrame {
 		this.principalWindowController = principalWindowController;
 	}
 
-	public LoginWindow getLoginWindow() {
-		return loginWindow;
+	public static JPanel getPrincipalPanel() {
+		return principalPanel;
 	}
 
-	public void setLoginWindow(LoginWindow loginWindow) {
-		this.loginWindow = loginWindow;
+	public static void setPrincipalPanel(JPanel principalPanel) {
+		PrincipalWindow.principalPanel = principalPanel;
 	}
 	
 	
