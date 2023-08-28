@@ -1,1 +1,1 @@
-# AluraHotel
+# AluraHotelChallenge
